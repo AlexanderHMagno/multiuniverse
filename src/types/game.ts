@@ -2,188 +2,276 @@ export type Choice = {
   key: 'A' | 'B' | 'C';
   label: string;
   description: string;
-  result: 'valid' | 'fail';
+  result: 'valid' | 'dark';
+  ending?: string;
 };
 
 export type Round = {
   title: string;
   description: string;
   choices: Choice[];
+  isDarkPath?: boolean;
 };
 
 export type GameState = {
   round: number;
   path: string[];
   isGameOver: boolean;
-  result: 'success' | 'fail' | null;
+  result: 'success' | 'dark' | null;
+  ending?: string;
+  isDarkPath?: boolean;
 };
 
 export const gameData: Round[] = [
   {
-    title: "Step 1: Where to Go?",
-    description: "You wake up in a foggy village. You can see three paths ahead of you.",
+    title: "The Mysterious Portal",
+    description: "You discover a strange portal in your backyard. Three shimmering doorways appear before you.",
     choices: [
       {
         key: 'A',
-        label: "Walk towards the smoke in the distance",
-        description: "You find an old barn that's been burned. Inside, there's a door in the floor that leads to a tunnel. This could be a way out!",
+        label: "Step through the golden doorway",
+        description: "The golden light envelops you, transporting you to a world of advanced technology and floating cities.",
         result: 'valid'
       },
       {
         key: 'B',
-        label: "Go to the old church nearby",
-        description: "The church door opens with a loud noise. As you walk in, the floor breaks and you fall into a dark basement. There's no way out.",
-        result: 'fail'
+        label: "Enter the silver doorway",
+        description: "The silver mist surrounds you, leading to an enchanted forest filled with magical creatures.",
+        result: 'valid'
       },
       {
         key: 'C',
-        label: "Visit the house with a candle in the window",
-        description: "An old woman opens the door. She looks at you and says, 'You're new here.' She gives you a key and tells you to use it carefully.",
+        label: "Choose the bronze doorway",
+        description: "The bronze portal pulses with dark energy, offering untold power to those who dare to grasp it.",
+        result: 'dark'
+      }
+    ]
+  },
+  // Light Path Steps
+  {
+    title: "First Challenge",
+    description: "In this new world, you face your first challenge. How do you proceed?",
+    choices: [
+      {
+        key: 'A',
+        label: "Use technology/magic to help others",
+        description: "You discover your ability to combine technology/magic to heal and assist the local inhabitants.",
+        result: 'valid'
+      },
+      {
+        key: 'B',
+        label: "Study the world's mysteries",
+        description: "You find ancient texts and artifacts that reveal the secrets of dimensional travel.",
+        result: 'valid'
+      },
+      {
+        key: 'C',
+        label: "Seize control of local resources",
+        description: "You realize that controlling key resources would give you significant power in this dimension.",
+        result: 'dark'
+      }
+    ]
+  },
+  // Dark Path Alternative Steps
+  {
+    title: "Dark Awakening",
+    description: "The dark energy courses through you, revealing new possibilities. What is your first move?",
+    isDarkPath: true,
+    choices: [
+      {
+        key: 'A',
+        label: "Corrupt the local leadership",
+        description: "You begin manipulating those in power, turning them into your puppets.",
+        result: 'dark'
+      },
+      {
+        key: 'B',
+        label: "Build a shadow army",
+        description: "You start recruiting followers, promising them a share of your growing power.",
+        result: 'dark'
+      },
+      {
+        key: 'C',
+        label: "Seek redemption",
+        description: "You try to resist the dark power's influence.",
         result: 'valid'
       }
     ]
   },
   {
-    title: "Step 2: The Mystery Box",
-    description: "You find a locked box with three items inside. Which one do you pick up?",
+    title: "Power Consolidation",
+    description: "Your influence grows stronger. How do you expand your control?",
+    isDarkPath: true,
     choices: [
       {
         key: 'A',
-        label: "Take the old map with strange marks",
-        description: "The map shows hidden tunnels under the school. This matches what you saw in the barn!",
-        result: 'valid'
+        label: "Master forbidden magic",
+        description: "You delve into ancient dark arts, gaining tremendous but corrupted power.",
+        result: 'dark'
       },
       {
         key: 'B',
-        label: "Pick up the mirror",
-        description: "You look in the mirror and see a dark shape behind you. It pulls you in, and you're lost in darkness.",
-        result: 'fail'
+        label: "Create a network of spies",
+        description: "You establish an intricate web of informants across dimensions.",
+        result: 'dark'
       },
       {
         key: 'C',
-        label: "Grab the spinning compass",
-        description: "The compass spins less when you're going the right way. It points you towards the school basement.",
+        label: "Consider peaceful alternatives",
+        description: "You question whether absolute power is truly what you seek.",
         result: 'valid'
       }
     ]
   },
   {
-    title: "Step 3: Choose Your Path",
-    description: "You're in the school basement. There are three tunnels in front of you.",
+    title: "The Choice of Power",
+    description: "You've gained knowledge and abilities. How will you use your newfound power?",
     choices: [
       {
         key: 'A',
-        label: "Take the wet tunnel with dripping water",
-        description: "The tunnel leads to an underground lake. The door closes behind you, and you can't go back.",
-        result: 'fail'
+        label: "Share knowledge with everyone",
+        description: "You decide to teach others, creating a network of dimensional travelers.",
+        result: 'valid'
       },
       {
         key: 'B',
-        label: "Follow the tunnel with glowing moss",
-        description: "The moss makes pretty music. You sit down to listen and forget why you came here.",
-        result: 'fail'
+        label: "Become a guardian",
+        description: "You take on the responsibility of protecting the boundaries between worlds.",
+        result: 'valid'
       },
       {
         key: 'C',
-        label: "Enter the dark tunnel with warm air",
-        description: "You can't see anything, but you feel warm air. You crawl forward and find sunlight at the end.",
+        label: "Dominate weaker dimensions",
+        description: "You begin conquering dimensions that can't resist your power.",
+        result: 'dark'
+      }
+    ]
+  },
+  {
+    title: "Dark Conquest",
+    description: "Your dominion expands. How will you handle resistance?",
+    isDarkPath: true,
+    choices: [
+      {
+        key: 'A',
+        label: "Crush all opposition",
+        description: "You demonstrate your overwhelming power by destroying any who dare resist.",
+        result: 'dark'
+      },
+      {
+        key: 'B',
+        label: "Manipulate dimensional politics",
+        description: "You pit dimensions against each other, weakening them for eventual conquest.",
+        result: 'dark'
+      },
+      {
+        key: 'C',
+        label: "Show unexpected mercy",
+        description: "You consider that true power might lie in forgiveness.",
         result: 'valid'
       }
     ]
   },
   {
-    title: "Step 4: Time Doors",
-    description: "You come out of the tunnel and see three glowing doors. Each shows a different time.",
+    title: "Building Alliances",
+    description: "Your influence grows. Which group do you choose to strengthen your cause?",
     choices: [
       {
         key: 'A',
-        label: "Go through the door showing the future",
-        description: "You see tall buildings and flying cars. But you're stuck watching the same five minutes over and over.",
-        result: 'fail'
+        label: "Partner with the Quantum Engineers",
+        description: "Their advanced technology could revolutionize dimensional travel safety.",
+        result: 'valid'
       },
       {
         key: 'B',
-        label: "Walk into the door with the old library",
-        description: "The library has books about different worlds. You find one that shows you how to get home.",
+        label: "Unite with the Ancient Mystics",
+        description: "Their wisdom could help prevent dimensional catastrophes.",
         result: 'valid'
       },
       {
         key: 'C',
-        label: "Enter the door with the old castle",
-        description: "You appear in the castle prison. The guards think you're doing magic and lock you up.",
-        result: 'fail'
+        label: "Subjugate powerful beings",
+        description: "You enslave powerful entities to serve your growing empire.",
+        result: 'dark'
       }
     ]
   },
   {
-    title: "Step 5: The Magic Books",
-    description: "In the library, you find three books that might help you get home.",
+    title: "Empire of Shadows",
+    description: "Your dark empire grows. How do you ensure absolute control?",
+    isDarkPath: true,
     choices: [
       {
         key: 'A',
-        label: "Read 'The Mirror Book'",
-        description: "The book tells you to look in a mirror and think of home. But you see too many copies of yourself and get confused.",
-        result: 'fail'
+        label: "Create dark artifacts",
+        description: "You forge powerful items to extend your influence across dimensions.",
+        result: 'dark'
       },
       {
         key: 'B',
-        label: "Open 'The Door Book'",
-        description: "The book says to draw a door and say where you live. But it takes you to the wrong houses.",
-        result: 'fail'
+        label: "Establish a reign of terror",
+        description: "You implement a system of fear and control across your domains.",
+        result: 'dark'
       },
       {
         key: 'C',
-        label: "Use 'The Memory Book'",
-        description: "The book tells you to close your eyes and remember your home clearly. When you open them, you're back!",
+        label: "Consider peaceful governance",
+        description: "You wonder if your empire could be ruled through respect rather than fear.",
         result: 'valid'
       }
     ]
   },
   {
-    title: "Step 6: Strange Friends",
-    description: "You're almost home, but you need help. Three unusual creatures offer to guide you.",
+    title: "The Ultimate Choice",
+    description: "A new discovery could change everything. What will you do with this knowledge?",
     choices: [
       {
         key: 'A',
-        label: "Follow the glowing butterfly",
-        description: "The butterfly is pretty, but it leads you in circles until you're lost in a garden of light.",
-        result: 'fail'
+        label: "Evolve dimensional travel",
+        description: "Use the discovery to make dimensional travel accessible to all worthy beings.",
+        result: 'valid',
+        ending: "The Evolution Master: Your breakthrough revolutionizes dimensional travel, making it safe and accessible to all who seek knowledge and understanding. The multiverse enters a golden age of exploration and cooperation."
       },
       {
         key: 'B',
-        label: "Trust the talking cat",
-        description: "The cat knows all the secret paths between worlds. It helps you find the right way home.",
-        result: 'valid'
+        label: "Preserve the balance",
+        description: "Implement the discovery carefully to maintain dimensional harmony.",
+        result: 'valid',
+        ending: "The Balance Keeper: Your careful stewardship of dimensional knowledge creates a perfect equilibrium between progress and stability. Future generations praise your wisdom in maintaining the delicate balance."
       },
       {
         key: 'C',
-        label: "Go with the shadow bird",
-        description: "The bird seems friendly, but it takes you to its nest in the dark world where shadows live.",
-        result: 'fail'
+        label: "Achieve ultimate power",
+        description: "Use the knowledge to ascend to godlike status.",
+        result: 'dark'
       }
     ]
   },
   {
-    title: "Step 7: The Last Test",
-    description: "You're at the final door home. You must answer one last question to prove it's really you.",
+    title: "The Dark Throne",
+    description: "You stand at the precipice of absolute power. What kind of ruler will you become?",
+    isDarkPath: true,
     choices: [
       {
         key: 'A',
-        label: "Tell a happy memory",
-        description: "The memory is nice, but it's one that many people share. The door stays closed.",
-        result: 'fail'
+        label: "Rule with absolute power",
+        description: "You become the supreme ruler of the multiverse, feared by all.",
+        result: 'dark',
+        ending: "The Dark Sovereign: Your iron grip extends across all dimensions. None dare challenge your absolute authority, and the multiverse trembles at the mere whisper of your name. Your power is unmatched, your rule eternal."
       },
       {
         key: 'B',
-        label: "Show your favorite thing",
-        description: "Your thing could belong to anyone from any world. The door doesn't open.",
-        result: 'fail'
+        label: "Create a dark paradise",
+        description: "You reshape reality according to your vision of perfect order.",
+        result: 'dark',
+        ending: "The Reality Tyrant: You remake the multiverse in your image, creating a dark utopia where your will is law. Every dimension reflects your twisted vision of perfection, and all beings serve your grand design."
       },
       {
         key: 'C',
-        label: "Share a secret only you know",
-        description: "You whisper your special secret. The door recognizes you and opens to your real home.",
-        result: 'valid'
+        label: "Seek redemption",
+        description: "At the height of your power, you choose a different path.",
+        result: 'valid',
+        ending: "The Redeemed Ruler: In your moment of ultimate triumph, you choose mercy over power. Your empire transforms into a force for good, proving that even the darkest heart can find the light."
       }
     ]
   }

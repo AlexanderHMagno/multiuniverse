@@ -13,6 +13,8 @@ const initialState: GameState = {
   path: [],
   isGameOver: false,
   result: null,
+  ending: undefined,
+  isDarkPath: false,
 };
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -27,24 +29,38 @@ export const useGameStore = create<GameStore>((set) => ({
       const newPath = [...state.path.slice(0, state.round), key];
       const isLastRound = state.round === gameData.length - 1;
       
-      if (choice.result === 'fail') {
+      // Handle dark path transition
+      if (choice.result === 'dark' && !state.isDarkPath) {
+        return {
+          ...state,
+          round: state.round + 1,
+          path: newPath,
+          isDarkPath: true,
+        };
+      }
+
+      // Handle redemption path
+      if (choice.result === 'valid' && state.isDarkPath) {
+        return {
+          ...state,
+          round: state.round + 1,
+          path: newPath,
+          isDarkPath: false,
+        };
+      }
+      
+      // Handle final round
+      if (isLastRound) {
         return {
           ...state,
           path: newPath,
           isGameOver: true,
-          result: 'fail',
+          result: choice.result === 'valid' ? 'success' : 'dark',
+          ending: choice.ending,
         };
       }
       
-      if (isLastRound && choice.result === 'valid') {
-        return {
-          ...state,
-          path: newPath,
-          isGameOver: true,
-          result: 'success',
-        };
-      }
-      
+      // Continue to next round
       return {
         ...state,
         round: state.round + 1,
@@ -56,12 +72,26 @@ export const useGameStore = create<GameStore>((set) => ({
     set((state) => {
       if (step >= state.path.length || step < 0) return state;
       
+      // When time traveling, check if we need to switch paths
+      const newPath = state.path.slice(0, step + 1);
+      let isDarkPath = false;
+      
+      // Recalculate isDarkPath based on choices up to this point
+      for (let i = 0; i <= step; i++) {
+        const round = gameData[i];
+        const choice = round.choices.find(c => c.key === newPath[i]);
+        if (choice?.result === 'dark') isDarkPath = true;
+        if (choice?.result === 'valid') isDarkPath = false;
+      }
+
       return {
         ...state,
         round: step + 1,
-        path: state.path.slice(0, step + 1),
+        path: newPath,
         isGameOver: false,
         result: null,
+        ending: undefined,
+        isDarkPath,
       };
     });
   },
