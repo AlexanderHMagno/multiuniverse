@@ -5,6 +5,7 @@ import { gameData } from '../types/game';
 interface GameStore extends GameState {
   makeChoice: (key: string) => void;
   resetGame: () => void;
+  timeTravel: (step: number) => void;
 }
 
 const initialState: GameState = {
@@ -23,7 +24,7 @@ export const useGameStore = create<GameStore>((set) => ({
       
       if (!choice) return state;
       
-      const newPath = [...state.path, key];
+      const newPath = [...state.path.slice(0, state.round), key];
       const isLastRound = state.round === gameData.length - 1;
       
       if (choice.result === 'fail') {
@@ -48,6 +49,19 @@ export const useGameStore = create<GameStore>((set) => ({
         ...state,
         round: state.round + 1,
         path: newPath,
+      };
+    });
+  },
+  timeTravel: (step: number) => {
+    set((state) => {
+      if (step >= state.path.length || step < 0) return state;
+      
+      return {
+        ...state,
+        round: step,
+        path: state.path.slice(0, step),
+        isGameOver: false,
+        result: null,
       };
     });
   },
