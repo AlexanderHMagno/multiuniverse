@@ -58,8 +58,8 @@ export const useGameStore = create<GameStore>((set) => ({
       
       return {
         ...state,
-        round: step,
-        path: state.path.slice(0, step),
+        round: step + 1,
+        path: state.path.slice(0, step + 1),
         isGameOver: false,
         result: null,
       };
