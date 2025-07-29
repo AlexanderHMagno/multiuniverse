@@ -45,7 +45,14 @@ export const DecisionCard = ({ choice, onSelect, isSelected, isRevealed }: Decis
             card-title flex-1
             ${isSelected ? 'text-primary' : 'text-base-content'}
           `}>
+
+<span className="flex items-center gap-2">
+              {choice.result === 'valid' 
+                ? '✨' 
+                : '⚠️' 
+              }
             {choice.label}
+              </span>
           </h3>
         </div>
 
@@ -67,10 +74,7 @@ export const DecisionCard = ({ choice, onSelect, isSelected, isRevealed }: Decis
                 ? 'badge-success badge-outline' 
                 : 'badge-error badge-outline'}
             `}>
-              {choice.result === 'valid' 
-                ? <span className="flex items-center gap-2">✨ Path Open</span>
-                : <span className="flex items-center gap-2">⚠️ Dead End</span>
-              }
+           
             </div>
           </motion.div>
         )}

@@ -114,24 +114,42 @@ export const GameScreen = () => {
           </motion.div>
           
           <div className="space-y-6">
-            <AnimatePresence mode="wait">
-              {currentRound.choices.map((choice) => (
-                <motion.div 
-                  key={choice.key}
+            {!selectedKey ? (
+              // Show all cards as small buttons when none is selected
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {currentRound.choices.map((choice) => (
+                  <motion.button
+                    key={choice.key}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleChoice(choice.key)}
+                    className="btn btn-lg btn-outline h-auto py-6 flex flex-col gap-2"
+                  >
+                    <span className="text-2xl font-bold">{choice.key}</span>
+                    <span className="text-sm opacity-80">{choice.label}</span>
+                  </motion.button>
+                ))}
+              </div>
+            ) : (
+              // Show only the selected card
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedKey}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
                 >
                   <DecisionCard
-                    choice={choice}
-                    onSelect={handleChoice}
-                    isSelected={selectedKey === choice.key}
-                    isRevealed={selectedKey !== null}
+                    choice={currentRound.choices.find(c => c.key === selectedKey)!}
+                    onSelect={() => setSelectedKey(null)}
+                    isSelected={true}
+                    isRevealed={true}
                   />
                 </motion.div>
-              ))}
-            </AnimatePresence>
+              </AnimatePresence>
+            )}
           </div>
           
           {/* Confirmation button */}
@@ -139,8 +157,14 @@ export const GameScreen = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-8 flex justify-center"
+              className="mt-8 flex justify-center gap-4"
             >
+              <button
+                onClick={() => setSelectedKey(null)}
+                className="btn btn-ghost btn-lg"
+              >
+                Choose Different Path
+              </button>
               <button
                 onClick={handleConfirm}
                 className="btn btn-primary btn-lg gap-2"
@@ -166,15 +190,13 @@ export const GameScreen = () => {
         </div>
 
         {/* Right side - Path Graph */}
-        
-          <div className="lg:w-1/3 lg:sticky lg:top-4 lg:self-start">
-            <PathGraph
-              path={path}
-              currentStep={round}
-              onNodeClick={handleTimeTravel}
-            />
-          </div>
-        
+        <div className="lg:w-1/3 lg:sticky lg:top-4 lg:self-start">
+          <PathGraph
+            path={path}
+            currentStep={round}
+            onNodeClick={handleTimeTravel}
+          />
+        </div>
       </div>
     </div>
   );
