@@ -11,10 +11,13 @@ export const GameScreen = () => {
 
   const handleChoice = (key: string) => {
     setSelectedKey(key);
-    setTimeout(() => {
-      makeChoice(key);
+  };
+
+  const handleConfirm = () => {
+    if (selectedKey) {
+      makeChoice(selectedKey);
       setSelectedKey(null);
-    }, 1500);
+    }
   };
 
   if (isGameOver) {
@@ -129,6 +132,25 @@ export const GameScreen = () => {
           ))}
         </AnimatePresence>
       </div>
+      
+      {/* Confirmation button */}
+      {selectedKey && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8 flex justify-center"
+        >
+          <button
+            onClick={handleConfirm}
+            className="btn btn-primary btn-lg gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+            Continue with this path
+          </button>
+        </motion.div>
+      )}
       
       <motion.div
         initial={{ opacity: 0 }}
