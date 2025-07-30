@@ -89,6 +89,12 @@ const titles: TitleCard[] = [
   }
 ];
 
+export const getTitleAndDescriptionByMorality = (goodChoices: number): { title: string, description: string } => {
+  const title = titles[goodChoices].title;
+  const description = titles[goodChoices].description;
+  return { title, description };
+}
+
 export const TitlesList = () => {
   const numberOfGoodChoices = titles.length - 1;
   return (

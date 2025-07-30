@@ -5,6 +5,7 @@ import { gameData } from '../types/game';
 import { DecisionCard } from './DecisionCard';
 import { PathGraph } from './PathGraph';
 import { MoralityOrb } from './MoralityOrb';
+import { getTitleAndDescriptionByMorality } from './TitlesList';
 
 const getCardColorByGoodChoices = (goodChoices: number, totalChoices: number): string => {
   // Calculate the equivalent score out of 10 for consistent coloring
@@ -106,6 +107,8 @@ export const GameScreen = () => {
   const totalChoices = path.length;
   const cardColor = getCardColorByGoodChoices(goodChoices, totalChoices);
   const textColor = getTextColorByGoodChoices(goodChoices, totalChoices);
+  const { description } = getTitleAndDescriptionByMorality(goodChoices);
+
 
   const handleChoice = (key: string) => {
     setSelectedKey(key);
@@ -141,6 +144,9 @@ export const GameScreen = () => {
                 <h2 className="card-title text-4xl mb-8 font-bold">
                   {title}
                 </h2>
+                <p className="text-lg mb-8">
+                  {description}
+                </p>
                 <div className="flex justify-center">
                   <button
                     onClick={resetGame}
