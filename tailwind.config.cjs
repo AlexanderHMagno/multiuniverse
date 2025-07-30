@@ -21,11 +21,13 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          "primary": "#6419E6",
+          "primary": "#8B5CF6",
           "secondary": "#D926AA",
           "accent": "#1FB2A5",
-          "neutral": "#191D24",
-          "base-100": "#1D232A",
+          "neutral": "#1F2937",
+          "base-100": "#111827",
+          "base-200": "#1F2937",
+          "base-300": "#374151",
           "info": "#3ABFF8",
           "success": "#36D399",
           "warning": "#FBBD23",
@@ -33,5 +35,6 @@ module.exports = {
         },
       },
     ],
+    darkTheme: "mytheme",
   },
 } 

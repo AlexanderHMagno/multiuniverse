@@ -107,9 +107,9 @@ export const TitlesList = () => {
               <h3 className={`card-title text-2xl ${title.textColor}`}>
                 {title.title}
               </h3>
-              <div className={`badge text-xs badge-outline ${title.textColor} mb-4 flex justify-center flex-row gap-2`}>
-                <span className="badge badge-outline badge-primary">{title.goodChoices} Light</span>
-                <span className="badge badge-outline badge-secondary">{numberOfGoodChoices - title.goodChoices} Dark</span>
+              <div className={`${title.textColor} mb-4 flex justify-center flex-row gap-2 text-xs font-bold`}>
+                <span>{title.goodChoices} Light</span>
+                <span>{numberOfGoodChoices - title.goodChoices} Dark</span>
               </div>
               <p className={`${title.textColor}`}>
                 {title.description}
