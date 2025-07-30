@@ -21,7 +21,7 @@ function App() {
           </motion.div>
         </div>
         <div className="navbar-center">
-          <div className="tabs tabs-boxed bg-base-300/50 p-1">
+          <div className="tabs tabs-boxed bg-base-300/50 backdrop-blur-sm shadow-xl bg-gray-600 m-5 p-5 rounded-lg">
             <motion.button 
               className={`relative tab tab-lg px-8 transition-colors duration-200 ${activeTab === 'game' ? 'text-primary font-bold' : 'hover:text-primary'}`}
               onClick={() => setActiveTab('game')}
@@ -62,7 +62,7 @@ function App() {
             transition={{ duration: 0.5 }}
           >
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-            v1.0
+            {/* v1.0 */}
           </motion.div>
         </div>
       </div>

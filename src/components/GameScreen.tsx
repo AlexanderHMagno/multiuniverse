@@ -52,6 +52,42 @@ const getTextColorByGoodChoices = (goodChoices: number, totalChoices: number): s
   }
 };
 
+const DecisionSummary = ({ path }: { path: string[] }) => {
+  return (
+    <div className="card backdrop-blur-sm shadow-xl mt-8">
+      <div className="card-body">
+        <h3 className="card-title text-2xl mb-6">Your Journey</h3>
+        <div className="space-y-6">
+          {path.map((choice, index) => {
+            const round = gameData[index];
+            const choiceDetails = round?.choices.find(c => c.key === choice);
+            
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="flex gap-4"
+              >
+               
+                <div className="flex-1">
+                  <h4 className="font-bold text-lg mb-1">{round.title}</h4>
+                  <div className="text-sm opacity-80 mb-2">{round.description}</div>
+                  <div className="bg-base-200/50 rounded-lg p-4">
+                    <div className="font-semibold mb-1">Your choice: {choiceDetails?.label}</div>
+                    <div className="text-sm opacity-80">{choiceDetails?.description}</div>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const GameScreen = () => {
   const { 
     round, 
@@ -94,7 +130,7 @@ export const GameScreen = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-6xl mx-auto px-4"
+        className="max-w-6xl mx-auto px-4 pb-16"
       >
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
@@ -115,6 +151,8 @@ export const GameScreen = () => {
                 </div>
               </div>
             </div>
+
+            <DecisionSummary path={path} />
           </div>
           
           <div className="lg:w-1/3 lg:sticky lg:top-4 lg:self-start">
