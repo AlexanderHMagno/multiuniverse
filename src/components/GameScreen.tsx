@@ -5,8 +5,12 @@ import { gameData } from '../types/game';
 import { DecisionCard } from './DecisionCard';
 import { PathGraph } from './PathGraph';
 
-const getColorByGoodChoices = (goodChoices: number): string => {
-  switch (goodChoices) {
+const getCardColorByGoodChoices = (goodChoices: number, totalChoices: number): string => {
+  // Calculate the equivalent score out of 10 for consistent coloring
+  const ratio = totalChoices === 0 ? 1 : (goodChoices / totalChoices);
+  const scoreOutOf10 = Math.round(ratio * 10);
+
+  switch (scoreOutOf10) {
     case 10:
       return 'bg-sky-200 border-sky-200';
     case 9:
@@ -26,7 +30,7 @@ const getColorByGoodChoices = (goodChoices: number): string => {
     case 2:
       return 'bg-red-600 border-red-700';
     case 1:
-      return 'bg-red-700 border-rose-800';
+      return 'bg-red-700 border-red-800';
     case 0:
       return 'bg-red-800 border-red-900';
     default:
@@ -34,13 +38,16 @@ const getColorByGoodChoices = (goodChoices: number): string => {
   }
 };
 
-const getTextColorByGoodChoices = (goodChoices: number): string => {
-  if (goodChoices >= 7) {
+const getTextColorByGoodChoices = (goodChoices: number, totalChoices: number): string => {
+  const ratio = totalChoices === 0 ? 1 : (goodChoices / totalChoices);
+  const scoreOutOf10 = Math.round(ratio * 10);
+
+  if (scoreOutOf10 >= 7) {
     return 'text-sky-950';
-  } else if (goodChoices >= 4) {
+  } else if (scoreOutOf10 >= 4) {
     return 'text-white';
   } else {
-    return 'text-rose-100';
+    return 'text-red-100';
   }
 };
 
@@ -49,6 +56,7 @@ export const GameScreen = () => {
     round, 
     path, 
     isGameOver, 
+    result, 
     title,
     goodChoices,
     makeChoice, 
@@ -57,6 +65,10 @@ export const GameScreen = () => {
   } = useGameStore();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const currentRound = gameData[round];
+
+  const totalChoices = path.length;
+  const cardColor = getCardColorByGoodChoices(goodChoices, totalChoices);
+  const textColor = getTextColorByGoodChoices(goodChoices, totalChoices);
 
   const handleChoice = (key: string) => {
     setSelectedKey(key);
@@ -77,9 +89,6 @@ export const GameScreen = () => {
   };
 
   if (isGameOver) {
-    const bgColor = getColorByGoodChoices(goodChoices);
-    const textColor = getTextColorByGoodChoices(goodChoices);
-
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -88,7 +97,7 @@ export const GameScreen = () => {
       >
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
-            <div className={`card backdrop-blur-sm shadow-xl mb-8 border-2 ${bgColor}`}>
+            <div className={`card backdrop-blur-sm shadow-xl mb-8 border-2 ${cardColor}`}>
               <div className="card-body items-center text-center">
                 <p className={`text-lg mb-2 ${textColor}`}>Based on your decisions, you have been awarded the title of</p>
                 <h2 className={`card-title text-4xl mb-8 font-bold ${textColor}`}>
@@ -133,12 +142,12 @@ export const GameScreen = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="card glass shadow-lg mb-8 bg-base-200/50">
+              <div className={`card shadow-xl mb-8 border-2 ${cardColor} transition-colors duration-500`}>
                 <div className="card-body py-8">
-                  <h2 className="card-title text-3xl justify-center text-primary mb-4">
+                  <h2 className={`card-title text-3xl justify-center mb-4 ${textColor}`}>
                     {currentRound.title}
                   </h2>
-                  <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
+                  <p className={`text-xl max-w-2xl mx-auto ${textColor}`}>
                     {currentRound.description}
                   </p>
                 </div>
@@ -158,7 +167,7 @@ export const GameScreen = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleChoice(choice.key)}
-                    className="btn btn-lg btn-outline h-auto py-6 flex flex-col gap-2"
+                    className="btn btn-lg btn-outline h-auto py-6 flex flex-col gap-2 glass"
                   >
                     <span className="text-2xl font-bold">{choice.key}</span>
                     <span className="text-sm opacity-80">{choice.label}</span>
@@ -194,17 +203,14 @@ export const GameScreen = () => {
             >
               <button
                 onClick={() => setSelectedKey(null)}
-                className="btn btn-ghost btn-lg"
+                className="btn btn-ghost btn-lg glass"
               >
                 Choose Different Path
               </button>
               <button
                 onClick={handleConfirm}
-                className="btn btn-primary btn-lg gap-2"
+                className="btn btn-primary btn-lg gap-2 glass"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
                 Continue with this path
               </button>
             </motion.div>
