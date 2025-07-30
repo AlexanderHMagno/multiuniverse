@@ -5,8 +5,56 @@ import { gameData } from '../types/game';
 import { DecisionCard } from './DecisionCard';
 import { PathGraph } from './PathGraph';
 
+const getColorByGoodChoices = (goodChoices: number): string => {
+  switch (goodChoices) {
+    case 10:
+      return 'bg-sky-200 border-sky-200';
+    case 9:
+      return 'bg-sky-300 border-sky-200';
+    case 8:
+      return 'bg-sky-200 border-sky-300';
+    case 7:
+      return 'bg-indigo-300 border-indigo-400';
+    case 6:
+      return 'bg-indigo-400 border-indigo-500';
+    case 5:
+      return 'bg-orange-400 border-orange-500';
+    case 4:
+      return 'bg-orange-500 border-orange-600';
+    case 3:
+      return 'bg-red-500 border-red-600';
+    case 2:
+      return 'bg-red-600 border-red-700';
+    case 1:
+      return 'bg-red-700 border-rose-800';
+    case 0:
+      return 'bg-red-800 border-red-900';
+    default:
+      return 'bg-base-200 border-base-300';
+  }
+};
+
+const getTextColorByGoodChoices = (goodChoices: number): string => {
+  if (goodChoices >= 7) {
+    return 'text-sky-950';
+  } else if (goodChoices >= 4) {
+    return 'text-white';
+  } else {
+    return 'text-rose-100';
+  }
+};
+
 export const GameScreen = () => {
-  const { round, path, isGameOver, result, ending, isDarkPath, makeChoice, resetGame, timeTravel } = useGameStore();
+  const { 
+    round, 
+    path, 
+    isGameOver, 
+    title,
+    goodChoices,
+    makeChoice, 
+    resetGame, 
+    timeTravel 
+  } = useGameStore();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const currentRound = gameData[round];
 
@@ -29,6 +77,9 @@ export const GameScreen = () => {
   };
 
   if (isGameOver) {
+    const bgColor = getColorByGoodChoices(goodChoices);
+    const textColor = getTextColorByGoodChoices(goodChoices);
+
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -37,22 +88,17 @@ export const GameScreen = () => {
       >
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
-            <div className={`card backdrop-blur-sm shadow-xl mb-8 ${result === 'dark' ? 'bg-base-300/50 border-2 border-error/50' : 'bg-base-200/50'}`}>
-              <div className="card-body">
-                <h2 className={`card-title text-3xl justify-center mb-4 ${result === 'dark' ? 'text-error' : 'text-success'}`}>
-                  {result === 'success' ? 'Journey Complete!' : 'Dark Ascension Complete!'}
+            <div className={`card backdrop-blur-sm shadow-xl mb-8 border-2 ${bgColor}`}>
+              <div className="card-body items-center text-center">
+                <p className={`text-lg mb-2 ${textColor}`}>Based on your decisions, you have been awarded the title of</p>
+                <h2 className={`card-title text-4xl mb-8 font-bold ${textColor}`}>
+                  {title}
                 </h2>
-                <p className="text-xl mb-6 text-center">
-                  {ending}
-                </p>
                 <div className="flex justify-center">
                   <button
                     onClick={resetGame}
-                    className={`btn btn-lg gap-2 ${result === 'dark' ? 'btn-error' : 'btn-primary'}`}
+                    className="btn btn-lg gap-2 glass btn-primary"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                    </svg>
                     Start New Journey
                   </button>
                 </div>
@@ -65,7 +111,6 @@ export const GameScreen = () => {
               path={path}
               currentStep={path.length - 1}
               onNodeClick={handleTimeTravel}
-              isDarkPath={isDarkPath}
             />
           </div>
         </div>
@@ -88,9 +133,9 @@ export const GameScreen = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className={`card glass shadow-lg mb-8 ${isDarkPath ? 'bg-base-300/50 border border-error/30' : 'bg-base-200/50'}`}>
+              <div className="card glass shadow-lg mb-8 bg-base-200/50">
                 <div className="card-body py-8">
-                  <h2 className={`card-title text-3xl justify-center mb-4 ${isDarkPath ? 'text-error' : 'text-primary'}`}>
+                  <h2 className="card-title text-3xl justify-center text-primary mb-4">
                     {currentRound.title}
                   </h2>
                   <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
@@ -113,8 +158,7 @@ export const GameScreen = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleChoice(choice.key)}
-                    className={`btn btn-lg btn-outline h-auto py-6 flex flex-col gap-2 
-                      ${isDarkPath && choice.result === 'dark' ? 'border-error hover:bg-error' : ''}`}
+                    className="btn btn-lg btn-outline h-auto py-6 flex flex-col gap-2"
                   >
                     <span className="text-2xl font-bold">{choice.key}</span>
                     <span className="text-sm opacity-80">{choice.label}</span>
@@ -135,7 +179,6 @@ export const GameScreen = () => {
                     onSelect={() => setSelectedKey(null)}
                     isSelected={true}
                     isRevealed={true}
-                    isDarkPath={isDarkPath}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -157,7 +200,7 @@ export const GameScreen = () => {
               </button>
               <button
                 onClick={handleConfirm}
-                className={`btn btn-lg gap-2 ${isDarkPath ? 'btn-error' : 'btn-primary'}`}
+                className="btn btn-primary btn-lg gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -172,8 +215,8 @@ export const GameScreen = () => {
             animate={{ opacity: 1 }}
             className="mt-12 text-center"
           >
-            <div className={`badge badge-lg gap-2 glass ${isDarkPath ? 'border-error' : ''}`}>
-              <span className={`w-2 h-2 rounded-full animate-pulse ${isDarkPath ? 'bg-error' : 'bg-primary'}`}></span>
+            <div className="badge badge-lg gap-2 glass">
+              <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
               <span className="font-medium">Step {round + 1} of {gameData.length}</span>
             </div>
           </motion.div>
@@ -185,7 +228,6 @@ export const GameScreen = () => {
             path={path}
             currentStep={round}
             onNodeClick={handleTimeTravel}
-            isDarkPath={isDarkPath}
           />
         </div>
       </div>

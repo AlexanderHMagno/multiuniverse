@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { GameState } from '../types/game';
-import { gameData } from '../types/game';
+import { gameData, getTitleByMorality } from '../types/game';
 
 interface GameStore extends GameState {
   makeChoice: (key: string) => void;
@@ -15,6 +15,9 @@ const initialState: GameState = {
   result: null,
   ending: undefined,
   isDarkPath: false,
+  goodChoices: 0,
+  evilChoices: 0,
+  title: undefined,
 };
 
 export const useGameStore = create<GameStore>((set) => ({
@@ -29,25 +32,9 @@ export const useGameStore = create<GameStore>((set) => ({
       const newPath = [...state.path.slice(0, state.round), key];
       const isLastRound = state.round === gameData.length - 1;
       
-      // Handle dark path transition
-      if (choice.result === 'dark' && !state.isDarkPath) {
-        return {
-          ...state,
-          round: state.round + 1,
-          path: newPath,
-          isDarkPath: true,
-        };
-      }
-
-      // Handle redemption path
-      if (choice.result === 'valid' && state.isDarkPath) {
-        return {
-          ...state,
-          round: state.round + 1,
-          path: newPath,
-          isDarkPath: false,
-        };
-      }
+      // Update morality counters
+      const newGoodChoices = state.goodChoices + (choice.morality === 'good' ? 1 : 0);
+      const newEvilChoices = state.evilChoices + (choice.morality === 'evil' ? 1 : 0);
       
       // Handle final round
       if (isLastRound) {
@@ -56,7 +43,9 @@ export const useGameStore = create<GameStore>((set) => ({
           path: newPath,
           isGameOver: true,
           result: choice.result === 'valid' ? 'success' : 'dark',
-          ending: choice.ending,
+          goodChoices: newGoodChoices,
+          evilChoices: newEvilChoices,
+          title: getTitleByMorality(newGoodChoices),
         };
       }
       
@@ -65,6 +54,8 @@ export const useGameStore = create<GameStore>((set) => ({
         ...state,
         round: state.round + 1,
         path: newPath,
+        goodChoices: newGoodChoices,
+        evilChoices: newEvilChoices,
       };
     });
   },
@@ -72,16 +63,17 @@ export const useGameStore = create<GameStore>((set) => ({
     set((state) => {
       if (step >= state.path.length || step < 0) return state;
       
-      // When time traveling, check if we need to switch paths
+      // Recalculate morality up to this point
       const newPath = state.path.slice(0, step + 1);
-      let isDarkPath = false;
+      let goodChoices = 0;
+      let evilChoices = 0;
       
-      // Recalculate isDarkPath based on choices up to this point
+      // Count good and evil choices up to this point
       for (let i = 0; i <= step; i++) {
         const round = gameData[i];
         const choice = round.choices.find(c => c.key === newPath[i]);
-        if (choice?.result === 'dark') isDarkPath = true;
-        if (choice?.result === 'valid') isDarkPath = false;
+        if (choice?.morality === 'good') goodChoices++;
+        if (choice?.morality === 'evil') evilChoices++;
       }
 
       return {
@@ -91,7 +83,9 @@ export const useGameStore = create<GameStore>((set) => ({
         isGameOver: false,
         result: null,
         ending: undefined,
-        isDarkPath,
+        goodChoices,
+        evilChoices,
+        title: undefined,
       };
     });
   },
