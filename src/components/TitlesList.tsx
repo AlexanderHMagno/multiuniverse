@@ -90,6 +90,7 @@ const titles: TitleCard[] = [
 ];
 
 export const TitlesList = () => {
+  const numberOfGoodChoices = titles.length - 1;
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold text-center mb-8">Dimensional Titles</h2>
@@ -106,8 +107,9 @@ export const TitlesList = () => {
               <h3 className={`card-title text-2xl ${title.textColor}`}>
                 {title.title}
               </h3>
-              <div className={`badge badge-outline ${title.textColor} mb-4`}>
-                {/* {title.goodChoices} Good Choices */}
+              <div className={`badge text-xs badge-outline ${title.textColor} mb-4 flex justify-center flex-row gap-2`}>
+                <span className="badge badge-outline badge-primary">{title.goodChoices} Light</span>
+                <span className="badge badge-outline badge-secondary">{numberOfGoodChoices - title.goodChoices} Dark</span>
               </div>
               <p className={`${title.textColor}`}>
                 {title.description}
