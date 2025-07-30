@@ -1,38 +1,41 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import { GameScreen } from './components/GameScreen';
+import { TitlesList } from './components/TitlesList';
 import './App.css';
 
 function App() {
-  return (
-    <div className="min-h-screen bg-base-300" data-theme="mytheme">
-      <div className="hero min-h-screen bg-base-200 bg-opacity-50 backdrop-blur-sm">
-        <div className="hero-content text-center">
-          <div className="max-w-7xl">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-16"
-            >
-              <h1 className="text-5xl md:text-7xl font-bold mb-4 text-primary">
-                Forking Paths
-              </h1>
-              <p className="text-xl md:text-2xl text-base-content opacity-80">
-                A Multiverse Game
-              </p>
-            </motion.div>
+  const [activeTab, setActiveTab] = useState<'game' | 'titles'>('game');
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+  return (
+    <div className="min-h-screen bg-base-100">
+      <div className="navbar bg-base-200/50 backdrop-blur-sm sticky top-0 z-50 mb-8">
+        <div className="navbar-start">
+          <div className="text-2xl font-bold text-primary">Dimensional Choices</div>
+        </div>
+        <div className="navbar-center">
+          <div className="tabs tabs-boxed bg-base-300/50">
+            <button 
+              className={`tab ${activeTab === 'game' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('game')}
             >
-              <GameScreen />
-            </motion.div>
+              Play Game
+            </button>
+            <button 
+              className={`tab ${activeTab === 'titles' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('titles')}
+            >
+              View Titles
+            </button>
           </div>
         </div>
+        <div className="navbar-end">
+          <div className="badge badge-ghost">v1.0</div>
+        </div>
       </div>
+
+      <main className="container mx-auto pb-16">
+        {activeTab === 'game' ? <GameScreen /> : <TitlesList />}
+      </main>
     </div>
   );
 }
