@@ -13,7 +13,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-base-100 text-gray-100 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#111827] text-gray-100 flex flex-col md:flex-row">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex flex-col w-48 bg-base-200 backdrop-blur-sm min-h-screen sticky top-0 border-r border-base-300/20">
         <motion.div 

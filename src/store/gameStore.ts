@@ -14,7 +14,7 @@ const initialState: GameState = {
   isGameOver: false,
   result: null,
   ending: undefined,
-  isDarkPath: false,
+  isDarkPath: true,
   goodChoices: 0,
   evilChoices: 0,
   title: undefined,
