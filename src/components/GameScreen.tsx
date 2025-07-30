@@ -4,6 +4,7 @@ import { useGameStore } from '../store/gameStore';
 import { gameData } from '../types/game';
 import { DecisionCard } from './DecisionCard';
 import { PathGraph } from './PathGraph';
+import { MoralityOrb } from './MoralityOrb';
 
 const getCardColorByGoodChoices = (goodChoices: number, totalChoices: number): string => {
   // Calculate the equivalent score out of 10 for consistent coloring
@@ -97,10 +98,11 @@ export const GameScreen = () => {
       >
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
-            <div className={`card backdrop-blur-sm shadow-xl mb-8 border-2 ${cardColor}`}>
+            <div className="card backdrop-blur-sm shadow-xl mb-8">
               <div className="card-body items-center text-center">
-                <p className={`text-lg mb-2 ${textColor}`}>Based on your decisions, you have been awarded the title of</p>
-                <h2 className={`card-title text-4xl mb-8 font-bold ${textColor}`}>
+                <MoralityOrb color={cardColor} size="lg" />
+                <p className="text-lg mb-2">Based on your decisions, you have been awarded the title of</p>
+                <h2 className="card-title text-4xl mb-8 font-bold">
                   {title}
                 </h2>
                 <div className="flex justify-center">
@@ -142,12 +144,15 @@ export const GameScreen = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className={`card shadow-xl mb-8 border-2 ${cardColor} transition-colors duration-500`}>
+              <div className="card glass shadow-xl mb-8">
                 <div className="card-body py-8">
-                  <h2 className={`card-title text-3xl justify-center mb-4 ${textColor}`}>
+                  <div className="flex justify-center mb-6">
+                    <MoralityOrb color={cardColor} size="lg" />
+                  </div>
+                  <h2 className="card-title text-3xl justify-center mb-4">
                     {currentRound.title}
                   </h2>
-                  <p className={`text-xl max-w-2xl mx-auto ${textColor}`}>
+                  <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
                     {currentRound.description}
                   </p>
                 </div>
